@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================================
+   Charte graphique OIJD - Section CIV (inspiree du logo officiel)
+   ========================================================================= */
+:root {
+  --ojid-green: #00860b;
+  --ojid-green-dark: #24752d;
+  --ojid-orange: #fc5d01;
+  --ojid-orange-flame: #fb8204;
+  --ojid-white: #ffffff;
+  --ojid-gray: #ebeceb;
+  --ojid-bluegray: #719d96;
+  --digital-purple: #6f2dbd;
+  --ink: #121212;
+  --muted: #667085;
+  --background: #ffffff;
+}
+
+@layer base {
+  * {
+    border-color: theme("colors.ojid.gray");
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--ink);
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  ::selection {
+    background: rgba(252, 93, 1, 0.18);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ojid-green);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Scrollbar discrete */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cdd6cf;
+    border-radius: 999px;
+    border: 2px solid #fff;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ojid-bluegray);
+  }
+}
+
+@layer components {
+  /* Conteneur centre standard */
+  .container-x {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Lien de navigation public */
+  .nav-link {
+    position: relative;
+    font-weight: 500;
+    color: #344054;
+    transition: color 0.2s ease;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 2px;
+    width: 0;
+    background: var(--ojid-orange);
+    transition: width 0.25s ease;
+  }
+  .nav-link:hover {
+    color: var(--ojid-green);
+  }
+  .nav-link:hover::after,
+  .nav-link[data-active="true"]::after {
+    width: 100%;
+  }
+  .nav-link[data-active="true"] {
+    color: var(--ojid-green);
+  }
+
+  /* Pastille de chapitre / eyebrow */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ojid-green);
+  }
+
+  /* Contenu d'article (actualites / activites) */
+  .prose-oijd {
+    color: #344054;
+    line-height: 1.75;
+  }
+  .prose-oijd > p {
+    margin-bottom: 1.1rem;
+  }
+  .prose-oijd h2 {
+    font-size: 1.4rem;
+    margin: 1.8rem 0 0.8rem;
+  }
+  .prose-oijd h3 {
+    font-size: 1.15rem;
+    margin: 1.4rem 0 0.6rem;
+  }
+  .prose-oijd ul {
+    list-style: disc;
+    padding-left: 1.4rem;
+    margin-bottom: 1.1rem;
+  }
+  .prose-oijd li {
+    margin-bottom: 0.35rem;
+  }
+  .prose-oijd strong {
+    color: var(--ink);
+  }
+  .prose-oijd a {
+    color: var(--ojid-green);
+    text-decoration: underline;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-gradient-ojid {
+    background: linear-gradient(
+      92deg,
+      var(--ojid-green) 0%,
+      var(--ojid-green-dark) 45%,
+      var(--ojid-orange) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Trame subtile facon "globe" */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(113, 157, 150, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(113, 157, 150, 0.12) 1px, transparent 1px);
+    background-size: 38px 38px;
+  }
+  .ribbon-divider {
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      var(--ojid-orange) 0%,
+      var(--ojid-orange) 33%,
+      #ffffff 33%,
+      #ffffff 66%,
+      var(--ojid-green) 66%,
+      var(--ojid-green) 100%
+    );
+  }
+}
+
+/* Accessibilite : respect de prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

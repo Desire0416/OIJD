@@ -1,0 +1,388 @@
+// =============================================================================
+// Plateforme institutionnelle OIJD - Section CIV
+// Conception et realisation : Digital Access - Web Access Solution
+// -----------------------------------------------------------------------------
+// Base de donnees : SQLite (developpement, fonctionne immediatement).
+// Pour passer en PostgreSQL (production) : remplacer provider par "postgresql",
+// puis convertir les champs JSON/listes (commentes ci-dessous) en Json / String[].
+//
+// SQLite ne supporte ni les enums natifs ni les listes scalaires (String[]).
+//  - Les "enums" sont donc des String, dont les valeurs autorisees sont
+//    centralisees dans lib/constants.ts (et validees par Zod).
+//  - Les listes et objets JSON sont stockes en String encodee JSON
+//    (helpers lib/json.ts : toJson / parseArray / parseObject).
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // connexion poolee (runtime) - Neon pooler + pgbouncer=true
+  directUrl = env("DIRECT_URL") // connexion directe (migrations / db push)
+}
+
+// ---------------------------------------------------------------------------
+// Utilisateurs & organisation interne
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("INTERNAL_READER") // cf. ROLES
+  status        String    @default("ACTIVE") // ACTIVE | INACTIVE | SUSPENDED
+  departmentId  String?
+  department    Department? @relation(fields: [departmentId], references: [id])
+  avatarUrl     String?
+  phone         String?
+  title         String?
+  bio           String?
+  resetToken    String?
+  resetTokenExp DateTime?
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  authoredNews      News[]
+  authoredActivities Activity[]
+  auditLogs         AuditLog[]
+  notifications     Notification[]
+  internalNotes     InternalNote[]
+
+  @@index([role])
+  @@index([departmentId])
+}
+
+model Department {
+  id               String  @id @default(cuid())
+  name             String
+  slug             String  @unique
+  icon             String? // nom d'icone lucide
+  shortDescription String?
+  description      String?
+  mission          String?
+  responsibilities String? // JSON array
+  publicEmail      String?
+  order            Int     @default(0)
+  isActive         Boolean @default(true)
+  headId           String? // id utilisateur du responsable
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  users         User[]
+  news          News[]
+  activities    Activity[]
+  opportunities Opportunity[]
+  documents     Document[]
+}
+
+// ---------------------------------------------------------------------------
+// Contenus : actualites, activites, partenaires
+// ---------------------------------------------------------------------------
+
+model News {
+  id           String    @id @default(cuid())
+  title        String
+  slug         String    @unique
+  excerpt      String?
+  content      String
+  coverImage   String?
+  category     String?
+  keywords     String    @default("[]") // JSON array
+  status       String    @default("DRAFT") // PublishStatus
+  featured     Boolean   @default(false)
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  authorId     String?
+  author       User?     @relation(fields: [authorId], references: [id])
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  documents Document[]
+
+  @@index([status])
+  @@index([departmentId])
+}
+
+model Activity {
+  id           String    @id @default(cuid())
+  title        String
+  slug         String    @unique
+  excerpt      String?
+  description  String
+  location     String?
+  startDate    DateTime?
+  endDate      DateTime?
+  objectives   String?
+  results      String?
+  status       String    @default("PLANNED") // ActivityStatus
+  coverImage   String?
+  gallery      String    @default("[]") // JSON array
+  partners     String    @default("[]") // JSON array (noms)
+  featured     Boolean   @default(false)
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  authorId     String?
+  author       User?     @relation(fields: [authorId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  documents Document[]
+
+  @@index([status])
+  @@index([departmentId])
+}
+
+model Partner {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  description     String?
+  logoUrl         String?
+  websiteUrl      String?
+  partnershipType String?
+  order           Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Centre des appels & opportunites
+// ---------------------------------------------------------------------------
+
+model Opportunity {
+  id                   String    @id @default(cuid())
+  title                String
+  slug                 String    @unique
+  type                 String    // OpportunityType
+  status               String    @default("DRAFT") // OpportunityStatus
+  summary              String?
+  context              String?
+  objectives           String?
+  targetAudience       String?
+  eligibility          String?
+  selectionCriteria    String?
+  requiredDocuments    String    @default("[]") // JSON array
+  downloadableDocs     String    @default("[]") // JSON array
+  openingDate          DateTime?
+  deadline             DateTime?
+  processCalendar      String?
+  submissionGuidelines String?
+  contactInfo          String?
+  faq                  String?   // JSON [{q,a}]
+  country              String?
+  city                 String?
+  domain               String?
+  educationLevel       String?
+  featured             Boolean   @default(false)
+  departmentId         String?
+  department           Department? @relation(fields: [departmentId], references: [id])
+  formSchema           String?   // JSON (champs dynamiques)
+  scoringCriteria      String?   // JSON (criteres ponderes)
+  resultsContent       String?
+  resultsPublishedAt   DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  submissions Submission[]
+  documents   Document[]
+
+  @@index([status])
+  @@index([type])
+  @@index([featured])
+}
+
+model Submission {
+  id                    String    @id @default(cuid())
+  reference             String    @unique // ex: OIJD-2026-AB12CD
+  opportunityId         String
+  opportunity           Opportunity @relation(fields: [opportunityId], references: [id])
+  status                String    @default("RECEIVED") // SubmissionStatus
+  submitterType         String    @default("INDIVIDUAL") // INDIVIDUAL | ORGANIZATION
+  firstName             String?
+  lastName              String?
+  organizationName      String?
+  email                 String
+  phone                 String?
+  country               String?
+  city                  String?
+  title                 String?
+  formData              String    @default("{}") // JSON
+  complete              Boolean   @default(false)
+  score                 Int?
+  scoreLabel            String?
+  scoreDetails          String?   // JSON
+  matchedCriteria       String?   // JSON array
+  missingCriteria       String?   // JSON array
+  recommendationSummary String?
+  finalDecision         String?
+  decidedById           String?
+  decidedAt             DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  documents     Document[]
+  notes         InternalNote[]
+  emailLogs     EmailLog[]
+  statusHistory SubmissionStatusHistory[]
+
+  @@index([opportunityId])
+  @@index([status])
+  @@index([score])
+}
+
+// ---------------------------------------------------------------------------
+// Documents securises
+// ---------------------------------------------------------------------------
+
+model Document {
+  id            String   @id @default(cuid())
+  name          String
+  originalName  String
+  mimeType      String
+  sizeBytes     Int
+  storageKey    String
+  url           String?
+  type          String?  // CV | LETTER | TECHNICAL_OFFER | FINANCIAL_OFFER | ...
+  visibility    String   @default("CONFIDENTIAL") // DocumentVisibility
+  departmentId  String?
+  department    Department? @relation(fields: [departmentId], references: [id])
+  newsId        String?
+  news          News?    @relation(fields: [newsId], references: [id])
+  activityId    String?
+  activity      Activity? @relation(fields: [activityId], references: [id])
+  opportunityId String?
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id])
+  submissionId  String?
+  submission    Submission? @relation(fields: [submissionId], references: [id])
+  uploadedById  String?
+  downloadCount Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  @@index([submissionId])
+  @@index([opportunityId])
+  @@index([visibility])
+}
+
+// ---------------------------------------------------------------------------
+// Traitement des dossiers : notes, historique de statut
+// ---------------------------------------------------------------------------
+
+model InternalNote {
+  id           String   @id @default(cuid())
+  content      String
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id])
+  createdAt    DateTime @default(now())
+
+  @@index([submissionId])
+}
+
+model SubmissionStatusHistory {
+  id           String   @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  oldStatus    String?
+  newStatus    String
+  changedById  String?
+  comment      String?
+  createdAt    DateTime @default(now())
+
+  @@index([submissionId])
+}
+
+// ---------------------------------------------------------------------------
+// Emails & notifications
+// ---------------------------------------------------------------------------
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  subject   String
+  bodyHtml  String
+  bodyText  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EmailLog {
+  id           String   @id @default(cuid())
+  submissionId String?
+  submission   Submission? @relation(fields: [submissionId], references: [id])
+  to           String
+  subject      String
+  bodyHtml     String?
+  templateKey  String?
+  status       String   // QUEUED | SENT | FAILED | LOGGED
+  error        String?
+  sentAt       DateTime?
+  createdAt    DateTime @default(now())
+
+  @@index([submissionId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String
+  readAt    DateTime?
+  link      String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([readAt])
+}
+
+model ContactMessage {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  subject      String
+  message      String
+  departmentId String?
+  status       String   @default("NEW") // NEW | READ | ANSWERED | ARCHIVED
+  createdAt    DateTime @default(now())
+
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Audit & parametres
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String
+  entityType String
+  entityId   String?
+  oldValue   String?  // JSON
+  newValue   String?  // JSON
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType])
+  @@index([userId])
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON
+  updatedAt DateTime @updatedAt
+}
