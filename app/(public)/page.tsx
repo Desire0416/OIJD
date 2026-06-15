@@ -25,6 +25,7 @@ import { DepartmentCard } from "@/components/public/department-card";
 import { PartnerCard } from "@/components/public/partner-card";
 import { StatsGrid } from "@/components/public/stats-grid";
 import { CtaBand } from "@/components/public/cta-band";
+import { PresidentWord } from "@/components/public/president-word";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export const dynamic = "force-dynamic";
@@ -75,6 +76,9 @@ export default async function HomePage() {
           </div>
         </Container>
       </Section>
+
+      {/* Mot du president */}
+      <PresidentWord />
 
       {/* Valeurs */}
       <Section muted>

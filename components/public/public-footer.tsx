@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { Icon } from "@/components/ui/icon";
 import { DigitalAccessCredit } from "@/components/public/digital-access-credit";
-import { publicNav, siteConfig } from "@/lib/site-config";
+import { publicNav, legalNav, siteConfig } from "@/lib/site-config";
 
 const exploreLinks = publicNav.filter((n) => n.href !== "/");
 
@@ -98,11 +98,25 @@ export function PublicFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-x flex flex-col items-center justify-between gap-3 py-5 text-center sm:flex-row sm:text-left">
-          <p className="text-xs text-white/55">
-            &copy; {new Date().getFullYear()} OIJD - {siteConfig.section}. Tous
-            droits reserves.
-          </p>
+        <div className="container-x flex flex-col items-center gap-3 py-5 text-center sm:flex-row sm:justify-between sm:text-left">
+          <div className="flex flex-col items-center gap-1.5 sm:flex-row sm:gap-4">
+            <p className="text-xs text-white/55">
+              &copy; {new Date().getFullYear()} OIJD - {siteConfig.section}. Tous
+              droits reserves.
+            </p>
+            <ul className="flex items-center gap-4">
+              {legalNav.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-xs text-white/55 transition-colors hover:text-white"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
           <DigitalAccessCredit />
         </div>
       </div>

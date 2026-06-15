@@ -16,7 +16,7 @@ export const siteConfig = {
     "L'OIJD - Section CIV federe une jeunesse engagee autour de la diplomatie, de la cooperation internationale et du leadership responsable. La plateforme valorise nos departements, nos activites et notre centre des appels et opportunites.",
   logo: "/brand/oijd-logo.png",
   logoCompact: "/brand/oijd-logo-compact.png",
-  url: "http://localhost:3000",
+  url: "https://oijd.vercel.app",
 
   contact: {
     email: "contact@oijd-civ.org",
@@ -38,7 +38,25 @@ export const siteConfig = {
     tagline:
       "Sites institutionnels, plateformes de gestion, portails d'appels a projets et systemes de candidatures en ligne.",
   },
+
+  // Mot du president (page d'accueil & a propos). Remplacer par les vrais
+  // nom, texte et photo (deposer la photo dans public/brand/president.jpg).
+  president: {
+    name: "", // ex: "Dr. Konan Yao" - laisser vide affiche uniquement le titre
+    title: "President de l'OIJD - Section CIV",
+    photo: "/brand/president.jpg",
+    message: [
+      "Chers membres, partenaires et amis de l'OIJD, notre Section Cote d'Ivoire porte une ambition claire : faire de la jeunesse un acteur de paix, de dialogue et de developpement durable.",
+      "A travers nos departements, nos activites et notre centre des appels, nous offrons a chaque jeune un espace pour s'engager, se former et contribuer a une diplomatie responsable, ouverte sur le monde et ancree dans nos valeurs.",
+    ],
+  },
 } as const;
+
+/** Liens legaux (footer). */
+export const legalNav: { label: string; href: string }[] = [
+  { label: "Mentions legales", href: "/mentions-legales" },
+  { label: "Confidentialite", href: "/confidentialite" },
+];
 
 /** Navigation publique a plat (utilisee par le plan de site du footer). */
 export const publicNav: { label: string; href: string }[] = [
