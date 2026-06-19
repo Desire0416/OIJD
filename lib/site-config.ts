@@ -42,7 +42,7 @@ export const siteConfig = {
   // Mot du president (page d'accueil & a propos). Remplacer par les vrais
   // nom, texte et photo (deposer la photo dans public/brand/president.jpg).
   president: {
-    name: "", // ex: "Dr. Konan Yao" - laisser vide affiche uniquement le titre
+    name: "ABDOUL-AMID GNELBIN",
     title: "President de l'OIJD - Section CIV",
     photo: "/brand/President.jpeg",
     message: [
@@ -77,7 +77,7 @@ export type BureauMember = {
 
 export const bureauExecutif = {
   president: {
-    name: "",               // Ex: "Jean-Marie KOUASSI" — a renseigner
+    name: "ABDOUL-AMID GNELBIN",
     title: "President",
     mission: "President de l'OIJD - Section CIV",
     photo: "/brand/President.jpeg",
