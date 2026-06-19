@@ -88,12 +88,14 @@ export const bureauExecutif = {
       name: "ABOLOU FREDY",
       title: "1er Vice-President",
       mission: "Charge de l'Administration et de la coordination Generale",
+      photo: "/brand/abolou-fredy.jpeg",
       gender: "M",
     },
     {
       name: "N'GUESSAN AFFRA",
       title: "2e Vice-Presidente",
       mission: "Chargee du Leadership Feminin et de l'Egalite des chances",
+      photo: "/brand/nguessan-affra.jpeg",
       gender: "F",
     },
     {
@@ -101,11 +103,13 @@ export const bureauExecutif = {
       title: "3e Vice-Presidente",
       mission: "Chargee de l'inclusion, de la Vie Associative et du Bien-etre des Membres",
       gender: "F",
+      // photo a venir
     },
     {
       name: "TOURE NOURA",
       title: "4e Vice-Presidente",
       mission: "Chargee de la Diaspora et de l'Engagement Benevole",
+      photo: "/brand/toure-noura.jpeg",
       gender: "F",
     },
   ] as BureauMember[],
