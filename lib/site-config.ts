@@ -58,6 +58,103 @@ export const legalNav: { label: string; href: string }[] = [
   { label: "Confidentialite", href: "/confidentialite" },
 ];
 
+// ---------------------------------------------------------------------------
+// Bureau Executif de l'OIJD - Section CIV
+// Les photos individuelles peuvent etre deposees dans public/brand/equipe/
+// sous le format [slug-du-nom].jpg (ex: abolou-fredy.jpg).
+// ---------------------------------------------------------------------------
+
+export type BureauMember = {
+  name: string;
+  /** Ex: "1er Vice-President" */
+  title: string;
+  /** Mission / portefeuille */
+  mission: string;
+  /** Chemin photo optionnel */
+  photo?: string;
+  gender: "M" | "F";
+};
+
+export const bureauExecutif = {
+  president: {
+    name: "",               // Ex: "Jean-Marie KOUASSI" — a renseigner
+    title: "President",
+    mission: "President de l'OIJD - Section CIV",
+    photo: "/brand/President.jpeg",
+    gender: "M" as const,
+  },
+  vicePresidents: [
+    {
+      name: "ABOLOU FREDY",
+      title: "1er Vice-President",
+      mission: "Charge de l'Administration et de la coordination Generale",
+      gender: "M",
+    },
+    {
+      name: "N'GUESSAN AFFRA",
+      title: "2e Vice-Presidente",
+      mission: "Chargee du Leadership Feminin et de l'Egalite des chances",
+      gender: "F",
+    },
+    {
+      name: "DIOMANDE EDEN",
+      title: "3e Vice-Presidente",
+      mission: "Chargee de l'inclusion, de la Vie Associative et du Bien-etre des Membres",
+      gender: "F",
+    },
+    {
+      name: "TOURE NOURA",
+      title: "4e Vice-Presidente",
+      mission: "Chargee de la Diaspora et de l'Engagement Benevole",
+      gender: "F",
+    },
+  ] as BureauMember[],
+  directeurs: [
+    {
+      name: "KONE SIDICK",
+      title: "Directeur",
+      mission: "Directeur Financier",
+      gender: "M",
+    },
+    {
+      name: "BAILLY ANDREA",
+      title: "Directrice",
+      mission: "Directrice Projets et Innovation Diplomatique",
+      gender: "F",
+    },
+    {
+      name: "WOMBLEGNON BRYAN",
+      title: "Directeur",
+      mission: "Directeur Protocole",
+      gender: "M",
+    },
+    {
+      name: "PEHI MONDEZIR",
+      title: "Directeur",
+      mission: "Directeur RI et Expansion",
+      gender: "M",
+    },
+    {
+      name: "YAO JASON",
+      title: "Directeur",
+      mission: "Directeur Communication & Informatique",
+      gender: "M",
+    },
+    {
+      name: "TOURE SAMIRA",
+      title: "Directrice",
+      mission: "Directrice Partenariats",
+      gender: "F",
+    },
+    {
+      name: "KOUASSI MARIE",
+      title: "Directrice",
+      mission: "Directrice Ressources Humaines",
+      gender: "F",
+    },
+  ] as BureauMember[],
+};
+
 /** Navigation publique a plat (utilisee par le plan de site du footer). */
 export const publicNav: { label: string; href: string }[] = [
   { label: "Accueil", href: "/" },
