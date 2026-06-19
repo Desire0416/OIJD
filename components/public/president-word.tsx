@@ -37,7 +37,7 @@ export function PresidentWord() {
               </div>
               {/* Photo officielle : public/brand/president.jpg */}
               <div
-                className="absolute inset-0 bg-cover bg-center"
+                className="absolute inset-0 bg-cover bg-top"
                 style={{ backgroundImage: `url('${p.photo}')` }}
               />
             </div>

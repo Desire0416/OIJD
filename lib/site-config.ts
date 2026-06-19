@@ -44,7 +44,7 @@ export const siteConfig = {
   president: {
     name: "", // ex: "Dr. Konan Yao" - laisser vide affiche uniquement le titre
     title: "President de l'OIJD - Section CIV",
-    photo: "/brand/president.jpg",
+    photo: "/brand/President.jpeg",
     message: [
       "Chers membres, partenaires et amis de l'OIJD, notre Section Cote d'Ivoire porte une ambition claire : faire de la jeunesse un acteur de paix, de dialogue et de developpement durable.",
       "A travers nos departements, nos activites et notre centre des appels, nous offrons a chaque jeune un espace pour s'engager, se former et contribuer a une diplomatie responsable, ouverte sur le monde et ancree dans nos valeurs.",
