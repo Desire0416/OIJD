@@ -81,6 +81,11 @@
     }
   }
 
+  /* Bandeau actualites defilant (ticker) */
+  .ticker-track:hover .animate-ticker {
+    animation-play-state: paused;
+  }
+
   /* Lien de navigation public */
   .nav-link {
     position: relative;

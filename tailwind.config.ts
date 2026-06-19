@@ -76,6 +76,10 @@ const config: Config = {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
+        ticker: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
@@ -85,6 +89,7 @@ const config: Config = {
         float: "float 6s ease-in-out infinite",
         "spin-slow": "spin-slow 40s linear infinite",
         shimmer: "shimmer 1.6s infinite",
+        ticker: "ticker 40s linear infinite",
       },
       backgroundImage: {
         "ojid-radial":
